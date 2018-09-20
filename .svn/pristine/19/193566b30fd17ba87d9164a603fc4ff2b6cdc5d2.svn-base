@@ -1,0 +1,98 @@
+package cn.sxt.sys.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.sxt.sys.domain.Role;
+import cn.sxt.sys.service.RoleService;
+import cn.sxt.sys.utils.DataGridView;
+import cn.sxt.sys.utils.JsonIdDispose;
+import cn.sxt.sys.vo.RoleVo;
+
+@Controller
+@RequestMapping("role")
+public class RoleController {
+	@Autowired
+	private RoleService roleService;
+	
+	@RequestMapping("toRoleManager")
+	public String toRoleManager() {
+		return "system/role/roleManager";
+	}
+	
+	@RequestMapping("queryAllRole")
+	@ResponseBody
+	public DataGridView queryAllRole(RoleVo roleVo) {
+		return roleService.queryAllRole(roleVo);
+	}
+	
+	@RequestMapping("toAddRole")
+	public String toAddRole() {
+		return "system/role/addRole";
+	}
+	
+	@RequestMapping("addRole")
+	@ResponseBody
+	public Map<String, Object> addRole(RoleVo roleVo) {
+		Map<String, Object> map=new HashMap<>();
+		int i = roleService.addRole(roleVo);
+		if(i>0){
+			map.put("msg", "添加成功");
+		}else{
+			map.put("msg", "添加失败");
+		}
+		return map;
+	}
+	
+	@RequestMapping("toUpdateRole")
+	public String toUpdateRole(RoleVo roleVo,Model model) {
+		Role role = roleService.queryRoleById(roleVo.getId());
+		model.addAttribute("role", role);
+		return "system/role/updateRole";
+	}
+	
+	@RequestMapping("updateRole")
+	@ResponseBody
+	public Map<String, Object> updateRole(RoleVo roleVo) {
+		Map<String, Object> map=new HashMap<>();
+		int i = roleService.updateRole(roleVo);
+		if(i>0){
+			map.put("msg", "修改成功");
+		}else{
+			map.put("msg", "修改失败");
+		}
+		return map;
+	}
+	
+	@RequestMapping("batchDeleteRole")
+	@ResponseBody
+	public Map<String, Object> batchDeleteRole(RoleVo roleVo) {
+		System.out.println("ids:---"+roleVo.getRoleIds());
+		 Integer[] roleIds = JsonIdDispose.disposeJsonString(roleVo.getRoleIds());
+		for (Integer roleId : roleIds) {
+			roleService.deleteRole(roleId);
+		}
+		Map<String, Object> map=new HashMap<>();
+			map.put("msg", "删除成功");
+		return map;
+	}
+	
+	@RequestMapping("deleteRole")
+	@ResponseBody
+	public Map<String, Object> deleteRole(RoleVo roleVo) {
+		int i = roleService.deleteRole(roleVo.getId());
+		Map<String, Object> map=new HashMap<>();
+		if(i>0){
+			map.put("msg", "删除成功");
+		}else{
+			map.put("msg", "删除失败");
+		}
+		return map;
+	}
+}

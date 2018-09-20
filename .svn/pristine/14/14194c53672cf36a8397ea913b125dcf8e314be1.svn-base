@@ -1,0 +1,7 @@
+package cn.sxt.sys.vo;
+
+import cn.sxt.sys.domain.User;
+
+public class UserVo extends User{
+
+}

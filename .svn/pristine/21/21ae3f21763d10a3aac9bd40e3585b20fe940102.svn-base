@@ -1,0 +1,59 @@
+package cn.sxt.sys.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+
+import cn.sxt.sys.domain.User;
+import cn.sxt.sys.mapper.UserMapper;
+import cn.sxt.sys.service.UserService;
+import cn.sxt.sys.utils.DataGridView;
+import cn.sxt.sys.vo.UserVo;
+@Service
+public class UserServiceImpl implements UserService {
+	
+	@Autowired
+	private UserMapper userMapper;
+	
+	@Override
+	public User queryUserByLoginName(String loginName) {
+		return userMapper.queryUserByLoginName(loginName);
+	}
+
+	@Override
+	public DataGridView queryAllUser(UserVo userVo) {
+		Page<Object> page = PageHelper.startPage(userVo.getPage(), userVo.getLimit());
+		List<UserVo> allUser = userMapper.queryAllUser(userVo);
+		return new DataGridView(page.getTotal(), allUser);
+	}
+
+	@Override
+	public int addUser(UserVo userVo) {
+		return userMapper.insertSelective(userVo);
+	}
+
+	@Override
+	public User queryUserById(Integer id) {
+		return userMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public int updateUser(UserVo userVo) {
+		return userMapper.updateByPrimaryKeySelective(userVo);
+	}
+
+	@Override
+	public int deleteUser(Integer userId) {
+		return userMapper.deleteByPrimaryKey(userId);
+	}
+
+	@Override
+	public List<UserVo> queryUserBydeptId(UserVo userVo) {
+		return userMapper.queryAllUser(userVo);
+	}
+
+}

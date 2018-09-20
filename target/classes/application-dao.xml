@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 导入头文件 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<!-- 读取db.properties里面的数据源配置信息 -->
+	<context:property-placeholder
+		location="classpath:db.properties" system-properties-mode="FALLBACK" />
+	<!-- springjdbc自带的数据源 -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${driver}"></property>
+		<property name="url" value="${url}"></property>
+		<property name="username" value="${username}"></property>
+		<property name="password" value="${password}"></property>
+	</bean>
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 注入数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 加载mybatis.cfg.xml -->
+		<property name="configLocation" value="classpath:mybatis.cfg.xml"></property>
+		<property name="mapperLocations">
+			<list>
+				<value>
+					classpath:cn/sxt/sys/mapping/*.xml
+				</value>
+				<value>
+					classpath:cn/sxt/bus/mapping/*.xml
+				</value>
+			</list>
+		</property>
+		<property name="plugins">
+			<list>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<property name="properties">
+						<value>
+							<!-- 配置数据库言 4.0之后的PageHepler可以不用配置 -->
+							<!-- 配置分页的出处理 如果数据库里面有10页，用户传-1页 此时会查询第一页 如果用户传15页，会查询最后一页 -->
+							reasonable=true
+						</value>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 注入扫描包的路径 如果有多个包 value="com.sxt.mapper,com.bjsxt.mapper" 或者 <value> 
+			com.sxt.mapper com.bjsxt.mapper </value> -->
+		<property name="basePackage"
+			value="cn.sxt.sys.mapper,cn.sxt.bus.mapper"></property>
+		<!-- <property name="basePackage" value="cn.sxt.bus.mapper"></property> -->
+		<property name="sqlSessionFactoryBeanName"
+			value="sqlSessionFactory"></property>
+	</bean>
+</beans>

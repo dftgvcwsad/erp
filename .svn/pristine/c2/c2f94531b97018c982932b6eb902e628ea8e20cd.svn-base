@@ -1,0 +1,112 @@
+package cn.sxt.bus.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import cn.sxt.bus.domain.Goods;
+import cn.sxt.bus.service.GoodsService;
+import cn.sxt.bus.utils.DataGridView;
+import cn.sxt.bus.vo.GoodsVo;
+import cn.sxt.sys.service.PermissionService;
+import cn.sxt.sys.utils.JsonIdDispose;
+
+@RequestMapping("goods")
+@Controller
+public class GoodsController {
+	
+	@Autowired
+	private GoodsService goodsService;
+	
+	@Autowired
+	private PermissionService permissionService;
+	
+	@RequestMapping("toGoodsManager")
+	public String toProviderManager() {
+		return "busness/goods/goodsManager";
+	}
+	
+	@RequestMapping("toGoodsLeft")
+	public String toGoodsLeft() {
+		return "busness/goods/goodsLeft";
+	}
+	
+	@RequestMapping("toGoodsRight")
+	public String toGoodsRight() {
+		
+		return "busness/goods/goodsRight";
+	}
+	
+	@RequestMapping("queryAllGoods")
+	@ResponseBody
+	public DataGridView queryAllGoods(GoodsVo goodsVo) {
+		DataGridView gridView = goodsService.queryAllGoods(goodsVo);
+		return gridView;
+	}
+	
+	@RequestMapping("toAddGoods")
+	public String toAddGoods() {
+		return "busness/goods/addGoods";
+	}
+	
+	@RequestMapping("addGoods")
+	@ResponseBody
+	public Map<String, Object> addGoods(GoodsVo goodsVo) {
+		Map<String, Object> map=new HashMap<>();
+		int i = goodsService.addGoods(goodsVo);
+		if(i>0){
+			map.put("msg", "添加成功");
+		}else{
+			map.put("msg", "添加失败");
+		}
+		return map;
+	}
+	
+	@RequestMapping("toUpdateGoods")
+	public String toUpdateGoods(GoodsVo goodsVo,Model model) {
+		Goods goods = goodsService.queryGoodsById(goodsVo.getId());
+		model.addAttribute("goods", goods);
+		return "busness/goods/updateGoods";
+	}
+	
+	@RequestMapping("updateGoods")
+	@ResponseBody
+	public Map<String, Object> updateGoods(GoodsVo goodsVo) {
+		Map<String, Object> map=new HashMap<>();
+		int i = goodsService.updateGoods(goodsVo);
+		if(i>0){
+			map.put("msg", "修改成功");
+		}else{
+			map.put("msg", "修改失败");
+		}
+		return map;
+	}
+	
+	@RequestMapping("deleteGoods")
+	@ResponseBody
+	public Map<String, Object> deleteGoods(GoodsVo goodsVo) {
+		int i = goodsService.deleteGoods(goodsVo.getId());
+		Map<String, Object> map=new HashMap<>();
+		if(i>0){
+			map.put("msg", "删除成功");
+		}else{
+			map.put("msg", "删除失败");
+		}
+		return map;
+	}
+	@RequestMapping("batchDeleteGoods")
+	@ResponseBody
+	public Map<String, Object> batchDeleteGoods(GoodsVo goodsVo) {
+		 Integer[] goodsIds = JsonIdDispose.disposeJsonString(goodsVo.getGoodsIds());
+		for (Integer infoId : goodsIds) {
+			goodsService.deleteGoods(infoId);
+		}
+		Map<String, Object> map=new HashMap<>();
+			map.put("msg", "删除成功");
+		return map;
+	}
+}

@@ -1,0 +1,20 @@
+package cn.sxt.sys.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import cn.sxt.sys.domain.User;
+import cn.sxt.sys.mapper.UserMapper;
+import cn.sxt.sys.service.UserService;
+@Service
+public class UserServiceImpl implements UserService {
+	
+	@Autowired
+	private UserMapper userMapper;
+	
+	@Override
+	public User queryUserByLoginName(String loginName) {
+		return userMapper.queryUserByLoginName(loginName);
+	}
+
+}

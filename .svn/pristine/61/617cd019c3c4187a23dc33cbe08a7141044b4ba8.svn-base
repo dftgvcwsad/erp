@@ -1,0 +1,128 @@
+package cn.sxt.bus.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import cn.sxt.bus.domain.Provider;
+import cn.sxt.bus.service.ProviderService;
+import cn.sxt.bus.utils.DataGridView;
+import cn.sxt.bus.vo.ProviderVo;
+import cn.sxt.sys.utils.JsonIdDispose;
+import cn.sxt.sys.utils.TreeNode;
+
+@RequestMapping("provider")
+@Controller
+public class ProviderController {
+	
+	@Autowired
+	private ProviderService providerService;
+	
+	@RequestMapping("toProviderManager")
+	public String toProviderManager() {
+		return "busness/provider/providerManager";
+	}
+	
+	@RequestMapping("queryAllProvider")
+	@ResponseBody
+	public DataGridView queryAllProvider(ProviderVo providerVo) {
+		DataGridView gridView = providerService.queryAllProvider(providerVo);
+		return gridView;
+	}
+	
+	@RequestMapping("loadProviderTree")
+	@ResponseBody
+	public List<TreeNode> loadProviderTree(ProviderVo providerVo) {
+		List<Provider> providerList = providerService.queryAllProviderForList(providerVo);
+		List<TreeNode> nodes=new ArrayList<>();
+		nodes.add(new TreeNode(0, 0,"所有供应商",true , true));
+		for (Provider pro : providerList) {
+			nodes.add(new TreeNode(pro.getId(), 0, pro.getProvidername(),false , false));
+		}
+		return nodes;
+	}
+	
+	@RequestMapping("loadAllProviderAvailableTree")
+	@ResponseBody
+	public List<TreeNode> loadAllProviderAvailableTree(ProviderVo providerVo) {
+		List<Provider> providerList = providerService.queryAllProviderForList(providerVo);
+		List<TreeNode> nodes=new ArrayList<>();
+		for (Provider pro : providerList) {
+			nodes.add(new TreeNode(pro.getId(), 0, pro.getProvidername(),false , false));
+		}
+		return nodes;
+	}
+	
+	@RequestMapping("queryProviderById")
+	@ResponseBody
+	public Provider queryProviderById(ProviderVo providerVo) {
+		return providerService.queryProviderById(providerVo.getId());
+	}
+	@RequestMapping("toAddProvider")
+	public String toAddProvider() {
+		return "busness/provider/addProvider";
+	}
+	
+	@RequestMapping("addProvider")
+	@ResponseBody
+	public Map<String, Object> addProvider(ProviderVo providerVo) {
+		Map<String, Object> map=new HashMap<>();
+		int i = providerService.addProvider(providerVo);
+		if(i>0){
+			map.put("msg", "添加成功");
+		}else{
+			map.put("msg", "添加失败");
+		}
+		return map;
+	}
+	
+	@RequestMapping("toUpdateProvider")
+	public String toUpdateProvider(ProviderVo providerVo,Model model) {
+		Provider provider = providerService.queryProviderById(providerVo.getId());
+		model.addAttribute("provider", provider);
+		return "busness/provider/updateProvider";
+	}
+	
+	@RequestMapping("updateProvider")
+	@ResponseBody
+	public Map<String, Object> updateProvider(ProviderVo providerVo) {
+		Map<String, Object> map=new HashMap<>();
+		int i = providerService.updateProvider(providerVo);
+		if(i>0){
+			map.put("msg", "修改成功");
+		}else{
+			map.put("msg", "修改失败");
+		}
+		return map;
+	}
+	
+	@RequestMapping("deleteProvider")
+	@ResponseBody
+	public Map<String, Object> deleteProvider(ProviderVo providerVo) {
+		int i = providerService.deleteProvider(providerVo.getId());
+		Map<String, Object> map=new HashMap<>();
+		if(i>0){
+			map.put("msg", "删除成功");
+		}else{
+			map.put("msg", "删除失败");
+		}
+		return map;
+	}
+	@RequestMapping("batchDeleteProvider")
+	@ResponseBody
+	public Map<String, Object> batchDeleteProvider(ProviderVo providerVo) {
+		 Integer[] providerIds = JsonIdDispose.disposeJsonString(providerVo.getProviderIds());
+		for (Integer infoId : providerIds) {
+			providerService.deleteProvider(infoId);
+		}
+		Map<String, Object> map=new HashMap<>();
+			map.put("msg", "删除成功");
+		return map;
+	}
+}

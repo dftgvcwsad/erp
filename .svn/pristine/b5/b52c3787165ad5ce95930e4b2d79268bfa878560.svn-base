@@ -1,0 +1,7 @@
+package cn.sxt.sys.service;
+
+import cn.sxt.sys.domain.User;
+
+public interface UserService {
+	User queryUserByLoginName(String loginName);
+}

@@ -1,0 +1,123 @@
+package cn.sxt.sys.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.sxt.sys.domain.User;
+import cn.sxt.sys.service.UserService;
+import cn.sxt.sys.utils.DataGridView;
+import cn.sxt.sys.utils.JsonIdDispose;
+import cn.sxt.sys.utils.PinyinUtils;
+import cn.sxt.sys.vo.UserVo;
+
+@Controller
+@RequestMapping("user")
+public class userController {
+	@Autowired
+	private UserService userService;
+	
+	@RequestMapping("toUserManager")
+	public String toUserManager() {
+		return "system/user/userManager";
+	}
+	
+	@RequestMapping("toUserLeft")
+	public String toUserLeft() {
+		return "system/user/userLeft";
+	}
+	
+	@RequestMapping("toUserRight")
+	public String toUserRight() {
+		return "system/user/userRight";
+	}
+	
+	
+	@RequestMapping("queryAllUser")
+	@ResponseBody
+	public DataGridView queryAllUser(UserVo userVo) {
+		return userService.queryAllUser(userVo);
+	}
+	
+	@RequestMapping("toAddUser")
+	public String toAddUser() {
+		return "system/user/addUser";
+	}
+	
+	@RequestMapping("getUserBydeptId")
+	@ResponseBody
+	public List<UserVo> getUserBydeptId(UserVo userVo) {
+		return userService.queryUserBydeptId(userVo);
+	}
+	
+	@RequestMapping(path="getLoginnamePinyinByName",produces="text/html;charset=utf-8")
+	@ResponseBody
+	public String getLoginnamePinyinByName(UserVo userVo) {
+		String pinYin = PinyinUtils.getPinYin(userVo.getName());
+		return pinYin;
+	}
+	
+	@RequestMapping("addUser")
+	@ResponseBody
+	public Map<String, Object> addUser(UserVo userVo) {
+		Map<String, Object> map=new HashMap<>();
+		int i = userService.addUser(userVo);
+		if(i>0){
+			map.put("msg", "添加成功");
+		}else{
+			map.put("msg", "添加失败");
+		}
+		return map;
+	}
+	
+	@RequestMapping("toUpdateUser")
+	public String toUpdateUser(UserVo userVo,Model model) {
+		User user = userService.queryUserById(userVo.getId());
+		model.addAttribute("user", user);
+		return "system/user/updateUser";
+	}
+	
+	@RequestMapping("updateUser")
+	@ResponseBody
+	public Map<String, Object> updateUser(UserVo userVo) {
+		Map<String, Object> map=new HashMap<>();
+		int i = userService.updateUser(userVo);
+		if(i>0){
+			map.put("msg", "修改成功");
+		}else{
+			map.put("msg", "修改失败");
+		}
+		return map;
+	}
+	
+	@RequestMapping("batchDeleteUser")
+	@ResponseBody
+	public Map<String, Object> batchDeleteUser(UserVo userVo) {
+		 Integer[] userIds = JsonIdDispose.disposeJsonString(userVo.getUserIds());
+		for (Integer userId : userIds) {
+			userService.deleteUser(userId);
+		}
+		Map<String, Object> map=new HashMap<>();
+			map.put("msg", "删除成功");
+		return map;
+	}
+	
+	@RequestMapping("deleteUser")
+	@ResponseBody
+	public Map<String, Object> deleteUser(UserVo userVo) {
+		int i = userService.deleteUser(userVo.getId());
+		Map<String, Object> map=new HashMap<>();
+		if(i>0){
+			map.put("msg", "删除成功");
+		}else{
+			map.put("msg", "删除失败");
+		}
+		return map;
+	}
+}
