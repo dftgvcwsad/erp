@@ -15,7 +15,6 @@
 	<link rel="stylesheet" href="${ctx }/resources/css/public.css" media="all" />
 </head>
 <body class="childrenBody">
-<form class="layui-form">
 	<blockquote class="layui-elem-quote quoteBox">
 		<form class="layui-form">
 			<div class="layui-form-item">
@@ -54,7 +53,6 @@
 		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
 		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
 	</script>
-</form>
 <script type="text/javascript" src="${ctx }/resources/layui/layui.js"></script>
 <script type="text/javascript" src="${ctx }/resources/zTree/js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript">

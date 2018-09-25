@@ -25,11 +25,6 @@ public class DeptController {
 	@Autowired
 	private DeptService deptService;
 	
-	@RequestMapping("toDeptManager")
-	public String toDeptManager() {
-		return "system/dept/deptManager";
-	}
-	
 	@RequestMapping("toDeptLeft")
 	public String toDeptLeft() {
 		return "system/dept/deptLeft";
