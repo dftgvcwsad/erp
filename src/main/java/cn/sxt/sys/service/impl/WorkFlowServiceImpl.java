@@ -29,6 +29,7 @@ import cn.sxt.sys.utils.DataGridView;
 import cn.sxt.sys.utils.SessionUtils;
 import cn.sxt.sys.vo.WorkFlowVo;
 import cn.sxt.sys.vo.act.ActProcessDefinitionEntity;
+import cn.sxt.sys.vo.act.ActTaskEntity;
 import cn.sxt.sys.vo.act.DeploymentEntity;
 
 @Service
@@ -141,9 +142,13 @@ public class WorkFlowServiceImpl implements WorkFlowService {
 		long count = taskService.createTaskQuery().taskAssignee(assignee).count();
 		List<Task> listPage = taskService.createTaskQuery().taskAssignee(assignee).orderByTaskCreateTime()
 		.listPage((flowVo.getPage() - 1) * flowVo.getLimit(), flowVo.getLimit());
-		
-		
-		return null;
+		List<ActTaskEntity> entities =new ArrayList<>();
+		for (Task task : listPage) {
+			ActTaskEntity entity=new ActTaskEntity();
+			BeanUtils.copyProperties(task, entity);
+			entities.add(entity);
+		}
+		return new DataGridView(count, entities);
 	}
 
 }

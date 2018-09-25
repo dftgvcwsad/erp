@@ -19,7 +19,7 @@
 	<!--操作-->
 	<script type="text/html" id="taskListBar">
 		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="toDoTask">办理任务</a>
-		<a class="layui-btn layui-btn-xs" lay-event="toViewProcessImage">查看任务图</a>
+		<a class="layui-btn layui-btn-xs" lay-event="toViewProcessImage">查看流程图</a>
 	</script>
 <script type="text/javascript" src="${ctx }/resources/layui/layui.js"></script>
 <script type="text/javascript">
@@ -43,11 +43,9 @@ layui.use(['form','layer','laydate','table','laytpl'],function(){
         id : "taskListTable",
         cols : [[
             {field: 'id', title: '任务ID', width:80, align:"center"},
-            {field: 'title', title: '任务标题', width:200, align:"center"},
-            {field: 'content', title: '任务详情',width:200, align:"center"},
-            {field: 'days', title: '请假天数', align:"center"},
-            {field: 'leavetime', title: '请假时间', align:'center'},
-            {field: 'username', title: '请假人', align:'center'},
+            {field: 'name', title: '任务名称', align:"center"},
+            {field: 'createTime', title: '任务创建时间',width:200, align:"center"},
+            {field: 'assignee', title: '任务办理人', align:'center'},
             {title: '操作', width:170, templet:'#taskListBar',fixed:"right",align:"center"}
         ]]
     });
