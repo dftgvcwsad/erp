@@ -1,7 +1,9 @@
 package cn.sxt.sys.service;
 
 import java.io.InputStream;
+import java.util.List;
 
+import cn.sxt.sys.domain.LeaveBill;
 import cn.sxt.sys.utils.DataGridView;
 import cn.sxt.sys.vo.WorkFlowVo;
 
@@ -20,4 +22,12 @@ public interface WorkFlowService {
 	void startLeaveBillProcess(Integer id);
 
 	DataGridView queryCurrentUserTask(WorkFlowVo flowVo);
+
+	LeaveBill queryLeaveBillByTaskId(String taskId);
+
+	List<String> queryOutcomeByTaskId(String taskId);
+
+	DataGridView queryCommonsByTaskId(String taskId);
+
+	void completeTask(WorkFlowVo flowVo);
 }

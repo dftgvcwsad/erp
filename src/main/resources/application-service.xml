@@ -30,6 +30,8 @@
 			<tx:method name="insert*" propagation="REQUIRED" />
 			<tx:method name="del*" propagation="REQUIRED" />
 			<tx:method name="reset*" propagation="REQUIRED" />
+			<tx:method name="start*" propagation="REQUIRED" />
+			<tx:method name="complete*" propagation="REQUIRED" />
 			<tx:method name="get*" propagation="REQUIRED" />
 			<tx:method name="query*" read-only="true" />
 		</tx:attributes>

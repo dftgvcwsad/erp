@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -11,10 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import cn.sxt.sys.domain.LeaveBill;
 import cn.sxt.sys.service.WorkFlowService;
 import cn.sxt.sys.utils.DataGridView;
 import cn.sxt.sys.vo.WorkFlowVo;
@@ -119,5 +122,37 @@ public class WorkFlowController {
 	@ResponseBody
 	public DataGridView queryCurrentUserTask(WorkFlowVo flowVo) {
 		return workFlowService.queryCurrentUserTask(flowVo);
+	}
+	
+	@RequestMapping("toDoTask")
+	public String toDoTask(WorkFlowVo flowVo,Model model) {
+		//根据任务ID查询请假单
+		LeaveBill leaveBill= workFlowService.queryLeaveBillByTaskId(flowVo.getTaskId());
+		//根据任务ID查询到按钮的集合
+		List<String> outcomes=workFlowService.queryOutcomeByTaskId(flowVo.getTaskId());
+		model.addAttribute("leaveBill", leaveBill);
+		model.addAttribute("outcomes", outcomes);
+		return "system/workFlow/doTask";
+	}
+	
+	@RequestMapping("queryCommonsByTaskId")
+	@ResponseBody
+	public DataGridView queryCommonsByTaskId(WorkFlowVo flowVo) {
+		return workFlowService.queryCommonsByTaskId(flowVo.getTaskId());
+	}
+	
+	@RequestMapping("completeTask")
+	@ResponseBody
+	public Map<String, Object> completeTask(WorkFlowVo flowVo) {
+		Map<String, Object> map=new HashMap<>();
+		String msg="提交成功";
+		try {
+			workFlowService.completeTask(flowVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg="提交失败";
+		}
+		map.put("msg", msg);
+		return map;
 	}
 }

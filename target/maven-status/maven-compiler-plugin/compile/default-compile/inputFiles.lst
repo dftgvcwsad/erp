@@ -69,6 +69,7 @@ D:\SPRING\SYS\0911_erp\src\main\java\cn\sxt\sys\vo\PermissionVo.java
 D:\SPRING\SYS\0911_erp\src\main\java\cn\sxt\sys\mapper\PermissionMapper.java
 D:\SPRING\SYS\0911_erp\src\main\java\cn\sxt\sys\mapper\RoleMapper.java
 D:\SPRING\SYS\0911_erp\src\main\java\cn\sxt\bus\vo\OutportVo.java
+D:\SPRING\SYS\0911_erp\src\main\java\cn\sxt\sys\vo\act\ActCommentEntity.java
 D:\SPRING\SYS\0911_erp\src\main\java\cn\sxt\bus\utils\RandomUtil.java
 D:\SPRING\SYS\0911_erp\src\main\java\cn\sxt\sys\constast\SYS_Constast.java
 D:\SPRING\SYS\0911_erp\src\main\java\cn\sxt\bus\vo\CustomerVo.java
