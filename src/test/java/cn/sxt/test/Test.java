@@ -7,4 +7,5 @@ public class Test {
 		String pinYin = PinyinUtils.getPinYin("我不好");
 		System.out.println(pinYin);
 	}
+	
 }
